@@ -1,7 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config();
+// require('dotenv').config();
+
+// Copy the .env.example in the root into a .env file in this folder
+const envFilePath = path.resolve(__dirname, `.env`);
+const env = require("dotenv").config({ path: envFilePath });
+if (env.error) {
+  throw new Error(`Unable to load the .env file from ${envFilePath}. Please copy .env.example to ${envFilePath}`);
+}
 
 const connectionString = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_OPTIONS}`;
 const userRoutes = require('./routes/user');
