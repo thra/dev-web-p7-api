@@ -7,12 +7,14 @@ const connectionString = `mongodb+srv://${process.env.MONGODB_USER}:${process.en
 const userRoutes = require('./routes/user');
 const bookRoutes = require('./routes/book')
 
+console.log(process.env.MONGODB_USER)
+
 mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('Connexion à MongoDB réussie !'))
-.catch(() => console.log('Connexion à MongoDB échouée !'));
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
 const app = express();
