@@ -8,9 +8,8 @@ exports.getAllBook = (req, res, next) => {
       console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
       if (process.env.NODE_ENV === 'prod') {
         books.forEach(item => {
-          const fileName = item.imageUrl.split('http://localhost:4000/images/')
+          const fileName = item.imageUrl.split('http://localhost:4000/images/')[1]
           item.imageUrl = `${API_URL}/images/${fileName}`
-
         });
       }
 
