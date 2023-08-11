@@ -27,7 +27,7 @@ exports.createBook = (req, res, next) => {
 
   const book = new Book({
     ...bookObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    imageUrl: `http://localhost:4000/images/${req.file.filename}`
   });
 
   book.save()
@@ -41,6 +41,13 @@ exports.getOneBook = (req, res, next) => {
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }
+
+      console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
+      if (process.env.NODE_ENV === 'prod') {
+        const fileName = book.imageUrl.split('http://localhost:4000/images/')[1]
+        book.imageUrl = `${API_URL}/images/${fileName}`
+      }
+
       res.status(200).json(book);
     })
     .catch(error => res.status(500).json({ error }));
@@ -62,7 +69,7 @@ exports.updateBook = (req, res, next) => {
   const book = req.file
     ? {
       ...JSON.parse(req.body.book),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename
+      imageUrl: `http://localhost:4000/images/${req.file.filename
         }`,
     }
     : { ...req.body };
@@ -115,7 +122,15 @@ exports.rateBook = (req, res, next) => {
       book.averageRating = parseFloat((book.ratings.reduce((sum, rating) => sum + rating.grade, 0) / book.ratings.length).toFixed(2));
 
       book.save()
-        .then(() => res.status(200).json(book))
+        .then(() => {
+          console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
+          if (process.env.NODE_ENV === 'prod') {
+            const fileName = book.imageUrl.split('http://localhost:4000/images/')[1]
+            book.imageUrl = `${API_URL}/images/${fileName}`
+          }
+
+          res.status(200).json(book)
+        })
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
