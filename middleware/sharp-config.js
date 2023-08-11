@@ -4,6 +4,8 @@ const fs = require('fs');
 const convertToWebp = async (req, res, next) => {
   if (!req.file) return next();
 
+  console.log("sharp - req.file:", req.file)
+
   const inputFile = req.file.path;
   const outputFile = inputFile.replace(/\.(jpg|jpeg|png)$/, '.webp');
 
