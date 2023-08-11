@@ -20,6 +20,11 @@ exports.getAllBook = (req, res, next) => {
 
 exports.createBook = (req, res, next) => {
   const bookObject = JSON.parse(req.body.book);
+
+  console.log("${req.protocol}:", req.protocol)
+  console.log("req.get('host'):", req.get('host'))
+  console.log("${req.file.filename}:", req.file.filename)
+
   const book = new Book({
     ...bookObject,
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
