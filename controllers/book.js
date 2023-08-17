@@ -58,6 +58,12 @@ exports.getTopBook = (req, res, next) => {
     .sort({ averageRating: -1 })
     .limit(3)
     .then((books) => {
+      if (process.env.NODE_ENV === 'prod') {
+        books.forEach(item => {
+          const fileName = item.imageUrl.split('http://localhost:4000/images/')[1]
+          item.imageUrl = `${API_URL}/images/${fileName}`
+        });
+      }
       res.status(200).json(books);
     })
     .catch((error) => {
